@@ -1,0 +1,321 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node {
+int info;
+struct node *next;
+};
+
+struct node *start = NULL;
+
+void create_list() {
+if (start == NULL) {
+int n;
+printf("\nEnter the number of nodes: ");
+scanf("%d", &n);
+if (n != 0) {
+int data, i;
+struct node *newnode, *temp;
+newnode = (struct node *)malloc(sizeof(struct node));
+start = newnode;
+temp = start;
+
+printf("\nEnter number to be inserted: ");
+scanf("%d", &data);
+start->info = data;
+
+for (i = 2; i <= n; i++) {
+newnode = (struct node *)malloc(sizeof(struct node));
+temp->next = newnode;
+
+printf("\nEnter number to be inserted: ");
+scanf("%d", &data);
+
+newnode->info = data;
+temp = temp->next;
+}
+temp->next = NULL;
+}
+printf("\nThe list is created\n");
+} else {
+printf("\nThe list is already created\n");
+}
+}
+
+void traverse() {
+struct node *temp;
+if (start == NULL)
+printf("\nList is empty\n");
+else {
+temp = start;
+while (temp != NULL) {
+printf("Data = %d\n", temp->info);
+temp = temp->next;
+}
+}
+}
+
+void insert_at_front() {
+int data;
+struct node *temp;
+temp = (struct node *)malloc(sizeof(struct node));
+
+printf("\nEnter the number to be inserted: ");
+scanf("%d", &data);
+temp->info = data;
+temp->next = start;
+start = temp;
+}
+
+void insert_at_end() {
+int data;
+struct node *temp, *head;
+temp = (struct node *)malloc(sizeof(struct node));
+
+printf("\nEnter number to be inserted: ");
+scanf("%d", &data);
+temp->info = data;
+temp->next = NULL;
+
+head = start;
+if (head == NULL) {
+start = temp;
+} else {
+while (head->next != NULL) {
+head = head->next;
+}
+head->next = temp;
+}
+}
+
+void insert_at_position() {
+struct node *temp, *newnode;
+int pos, data, i = 1;
+
+newnode = (struct node *)malloc(sizeof(struct node));
+
+printf("\nEnter position and data: ");
+scanf("%d%d", &pos, &data);
+newnode->info = data;
+
+if (pos == 1) {
+newnode->next = start;
+start = newnode;
+return;
+}
+
+temp = start;
+while (i < pos - 1 && temp != NULL) {
+temp = temp->next;
+i++;
+}
+
+if (temp == NULL) {
+printf("\nInvalid position!\n");
+} else {
+newnode->next = temp->next;
+temp->next = newnode;
+}
+}
+
+void delete_first() {
+struct node *temp;
+if (start == NULL)
+printf("\nList is empty\n");
+else {
+temp = start;
+start = start->next;
+free(temp);
+}
+}
+
+void delete_end() {
+struct node *temp, *prevnode;
+if (start == NULL) {
+printf("\nThe list is empty\n");
+} else if (start->next == NULL) {
+free(start);
+start = NULL;
+} else {
+temp = start;
+while (temp->next != NULL) {
+prevnode = temp;
+temp = temp->next;
+}
+free(temp);
+prevnode->next = NULL;
+}
+}
+
+void delete_at_position() {
+struct node *temp, *position;
+int i = 1, pos;
+
+if (start == NULL) {
+printf("\nThe list is empty\n");
+return;
+}
+
+printf("\nEnter index: ");
+scanf("%d", &pos);
+
+if (pos == 1) {
+delete_first();
+return;
+}
+
+temp = start;
+while (i < pos - 1 && temp != NULL) {
+temp = temp->next;
+i++;
+}
+
+if (temp == NULL || temp->next == NULL) {
+printf("\nInvalid position!\n");
+} else {
+position = temp->next;
+temp->next = position->next;
+free(position);
+}
+}
+
+void maximum() {
+struct node *temp;
+if (start == NULL) {
+printf("\nList is empty\n");
+} else {
+temp = start;
+int max = temp->info;
+
+while (temp != NULL) {
+if (max < temp->info)
+max = temp->info;
+temp = temp->next;
+}
+printf("\nMaximum number is: %d\n", max);
+}
+}
+
+void mean() {
+struct node *temp;
+int sum = 0, count = 0;
+if (start == NULL) {
+printf("\nList is empty\n");
+return;
+}
+
+temp = start;
+while (temp != NULL) {
+sum += temp->info;
+temp = temp->next;
+count++;
+}
+
+float mean = (float)sum / count;
+printf("\nMean is: %.2f\n", mean);
+}
+
+void sort() {
+struct node *current = start, *index = NULL;
+int temp;
+
+if (start == NULL)
+return;
+
+while (current != NULL) {
+index = current->next;
+while (index != NULL) {
+if (current->info > index->info) {
+temp = current->info;
+current->info = index->info;
+index->info = temp;
+}
+index = index->next;
+}
+current = current->next;
+}
+}
+
+void reverse_ll() {
+struct node *t1 = NULL, *t2 = NULL, *temp;
+
+while (start != NULL) {
+t2 = start->next;
+start->next = t1;
+t1 = start;
+start = t2;
+}
+
+start = t1;
+temp = start;
+
+printf("\nReversed linked list: ");
+while (temp != NULL) {
+printf("%d ", temp->info);
+temp = temp->next;
+}
+printf("\n");
+}
+
+int main() {
+int choice;
+
+while (1) {
+printf("\n1. See list");
+printf("\n2. Insert at front");
+printf("\n3. Insert at end");
+printf("\n4. Insert at any position");
+printf("\n5. Delete first element");
+printf("\n6. Delete last element");
+printf("\n7. Delete element at any position");
+printf("\n8. Find maximum");
+printf("\n9. Find mean");
+printf("\n10. Sort elements");
+printf("\n11. Reverse linked list");
+printf("\n12. Exit");
+printf("\nEnter choice: ");
+scanf("%d", &choice);
+
+switch (choice) {
+case 1:
+traverse();
+break;
+case 2:
+insert_at_front();
+break;
+case 3:
+insert_at_end();
+break;
+case 4:
+insert_at_position();
+break;
+case 5:
+delete_first();
+break;
+case 6:
+delete_end();
+break;
+case 7:
+delete_at_position();
+break;
+case 8:
+maximum();
+break;
+case 9:
+mean();
+break;
+case 10:
+sort();
+break;
+case 11:
+reverse_ll();
+break;
+case 12:
+exit(0);
+default:
+printf("\nIncorrect choice\n");
+}
+}
+
+return 0;
+}
